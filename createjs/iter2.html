@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Learning CreateJS</title>
+    <style>
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <p>Now we've added Popmotion for the pointer listener and a few more colors.</p>
+
+    <p><a href="/createjs">Back</a></p>
+
+<script src="./deps/popmotion.global.min.js"></script>
+<script src="./deps/easeljs.min.js"></script>
+
+<script>
+
+// Set up popmotion
+const { pointer, transform } = popmotion
+const { interpolate } = transform
+
+// Build canvas
+const dynamicCanvas = document.createElement('canvas')
+dynamicCanvas.setAttribute('width', window.innerWidth)
+dynamicCanvas.setAttribute('height', window.innerHeight)
+dynamicCanvas.setAttribute('id', 'canvas')
+document.body.appendChild(dynamicCanvas)
+
+// Create a stage by getting a reference to the canvas
+const stage = new createjs.Stage('canvas')
+
+// Create colors
+const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
+const circles = []
+
+// Create and place circles
+colors.forEach((color, i) => {
+    const circle = new createjs.Shape()
+    const size = interpolate([0, colors.length - 1], [40, 10])
+    circle.graphics.beginFill(color).drawCircle(0, 0, size(i))
+    circle.x = circle.y = 0
+    circles.push(circle)
+    stage.addChild(circle)
+})
+
+// Prep target
+const target = { x: 0, y: 0 }
+// Prep for movement
+const speed = 5
+let lastFrame = Date.now()
+
+// Set up pointer listener
+pointer().start(({ x, y }) => {
+    target.x = x
+    target.y = y
+})
+
+// Update
+function update(){
+    // Get delta time
+    const deltaTime = (Date.now() - lastFrame) / 1000
+    lastFrame = Date.now()
+
+    circles.forEach((circle, i) => {
+        const fraction = interpolate([0, circles.length - 1], [1, 0.4])(i)
+
+        // Move circle toward target
+        circle.x += (speed * fraction * deltaTime) * (target.x - circle.x)
+        circle.y += (speed * fraction * deltaTime) * (target.y - circle.y)
+
+    })
+
+
+    stage.update()
+    requestAnimationFrame(update)
+}
+
+requestAnimationFrame(update)
+
+</script>
+
+</body>
+
+</html>

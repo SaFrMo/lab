@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Learning CreateJS</title>
+    <style>
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <p>You can get a lot of life from just a little math!</p>
+
+    <p>You can also get a lot of events fire by 'mousemove,' so this animation might be jerky at times.</p>
+
+    <p><a href="/createjs">Back</a></p>
+
+<script src="./deps/easeljs.min.js"></script>
+
+<script>
+
+// Build canvas
+const dynamicCanvas = document.createElement('canvas')
+dynamicCanvas.setAttribute('width', window.innerWidth)
+dynamicCanvas.setAttribute('height', window.innerHeight)
+dynamicCanvas.setAttribute('id', 'canvas')
+document.body.appendChild(dynamicCanvas)
+
+// Create a stage by getting a reference to the canvas
+const stage = new createjs.Stage('canvas')
+
+// Create and place circle
+const circle = new createjs.Shape()
+circle.graphics.beginFill('red').drawCircle(0, 0, 40)
+circle.x = circle.y = 0
+stage.addChild(circle)
+
+// Prep target
+const target = { x: 0, y: 0 }
+// Prep for movement
+const speed = 5
+let lastFrame = Date.now()
+
+// Set up pointer listener
+document.addEventListener('mousemove', evt => {
+    target.x = evt.x
+    target.y = evt.y
+})
+
+// Update
+function update(){
+    // Get delta time
+    const deltaTime = (Date.now() - lastFrame) / 1000
+    lastFrame = Date.now()
+
+    // Move circle toward target
+    circle.x += (speed * deltaTime) * (target.x - circle.x)
+    circle.y += (speed * deltaTime) * (target.y - circle.y)
+
+    stage.update()
+    requestAnimationFrame(update)
+}
+
+requestAnimationFrame(update)
+
+</script>
+
+</body>
+
+</html>
