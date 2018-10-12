@@ -19,7 +19,9 @@
 
     <p>Now we're adding some consequences!</p>
 
-    <p>Imagine this is a top-down view of the player carrying a stack of plates. If your top plate falls off, it'll stay on the ground.</p>
+    <p>Imagine this is a top-down view of the player carrying a stack of plates. If your top plate falls off, it'll crash to the ground.</p>
+
+    <p>(You might want to reload the page and start with your cursor in the upper left hand corner to get a fair shot at it.)
 
     <p><a href="/createjs">Back</a></p>
 
@@ -45,6 +47,8 @@ const stage = new createjs.Stage('canvas')
 // Create colors
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
 const circles = []
+// array of circle indexes we'll be ignoring
+const ignoreList = []
 
 // Create and place circles
 colors.forEach((color, i) => {
@@ -75,20 +79,33 @@ function update(){
     lastFrame = Date.now()
 
     circles.forEach((circle, i) => {
-        const fraction = interpolate([0, circles.length - 1], [1, 0.4])(i)
+        // ignore if we've fallen off the stack
+        if (ignoreList.includes(i)){
+            return
+        }
+
+        const fraction = interpolate([0, circles.length - 1], [1, 0.2])(i)
 
         let processMovement = true
-
-        if (i == circles.length - 1){
-            // TODO: Start here
-        }
 
         // Move circle toward target
         circle.x += (speed * fraction * deltaTime) * (target.x - circle.x)
         circle.y += (speed * fraction * deltaTime) * (target.y - circle.y)
 
-    })
+        // check if this and the previous circle aren't touching anymore
+        // (doesn't apply for the first circle)
+        if (i != 0){
+            const siblingRadius = circles[i - 1].graphics.command.radius
+            const distance = Math.hypot(
+                circles[i - 1].x - circles[i].x,
+                circles[i - 1].y - circles[i].y
+            )
+            if( distance > siblingRadius ){
+                ignoreList.push(i)
+            }
+        }
 
+    })
 
     stage.update()
     requestAnimationFrame(update)
