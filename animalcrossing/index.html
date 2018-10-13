@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Animal Crossing</title>
+</head>
+
+<body>
+
+<p><a href="../">Back</a></p>
+
+<h1>Animal Crossing</h1>
+
+<p>Nintendo's player character animations are pretty stunning, so let's take a deep dive into one.</p>
+
+<h2>The Subject</h2>
+
+<p>We're going to take a look at this little quick-turn animation from <a href="https://en.wikipedia.org/wiki/Animal_Crossing_(video_game)" target="_blank">the original Animal Crossing</a>, released in 2001 for the GameCube.</p>
+
+<video src="./assets/movement.mp4" muted controls></video>
+
+<h2>Why This One</h2>
+
+<p>This shows exactly the kind of detail I get really excited about in games - the small, strictly unnecessary touches that give your player a bit of extra personality and flesh out the feel of the game.</p>
+
+<p><em>Animal Crossing</em> is whimsical even as it's task-based. The game knows you're going to be running a lot of errands for the animals in your town, so they've added some things to do in the spaces where you'll be running - bugs to catch, trees to shake, treasure to dig up, and so on.</p>
+
+<p>That also extends to the way the player moves. They can twirl their umbrella, walk, and run, and when they hold down the "run" button and quickly change direction, they'll do this neat little slide.</p>
+
+<p>Since it's a core movement mechanic, it's one the player has access to all the time, and one that needs to be as fun as the bright colors and friendly characters of the town - it all needs to fit the feel of <em>Animal Crossing</em>.
+
+<p>Let's get started!</p>
+
+<h2 id="high-level">High-Level</h2>
+
+<p>The movement we're looking at is just under a second long - let's call it 1 second to make things simpler. We'll be moving from a running state to the animation, then immediately back into a running state again.</p>
+
+<p>Those start and end states look like this:</p>
+
+<div class="timeline">
+    <p>last frame of running</p>
+    <img src="./assets/running-end.png">
+
+    <p>first frame of sliding</p>
+    <img src="./assets/sliding-start.png">
+
+    <p class="filler">...sliding here...</p>
+
+    <p>last frame of sliding</p>
+    <img src="./assets/sliding-end.png">
+
+    <p>first frame of running</p>
+    <img src="./assets/running-start.png">
+</div>
+
+<style>
+
+.timeline {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    max-width: 600px;
+}
+.timeline .two-wide {
+    grid-column: 1 / span 2;
+}
+.filler {
+    grid-column: 1 / span 2;
+    background: #ccc;
+    text-align: center;
+    padding: 5px;
+}
+
+</style>
+
+</body>
+
+</html>
