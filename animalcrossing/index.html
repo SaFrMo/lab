@@ -54,6 +54,10 @@
     <img src="./assets/running-start.png">
 </div>
 
+<p>We're going to draw some stick figure lines over the character like this in each frame:</p>
+
+<img class="stick-figure-overlay" src="./assets/running-end.png">
+
 <style>
 
 .timeline {
@@ -72,7 +76,44 @@
     padding: 5px;
 }
 
+/* Stick figure */
+.stick-wrapper {
+    font-size: 0;
+    position: relative;
+    display: inline-block;
+}
+.stick-wrapper .overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+
 </style>
+
+<script>
+
+// add overlay to each timeline image
+const images = document.querySelectorAll('.stick-figure-overlay')
+images.forEach(image => {
+
+    // wrap the image
+    const wrapper = document.createElement('div')
+    image.insertAdjacentHTML('beforebegin', '<div class="stick-wrapper"></div>')
+    const wrapperInDom = image.previousElementSibling
+    wrapperInDom.appendChild(image)
+
+    // add the overlay
+    const overlay = document.createElement('div')
+    overlay.classList.add('overlay')
+    wrapperInDom.appendChild(overlay)
+
+})
+
+</script>
 
 </body>
 
