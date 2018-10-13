@@ -83,6 +83,7 @@
     display: inline-block;
 }
 .stick-wrapper .overlay {
+    font-size: initial;
     position: absolute;
     top: 0;
     right: 0;
@@ -94,7 +95,12 @@
 
 </style>
 
+<script src="/js/vue.js"></script>
+<script src="/js/popmotion.global.min.js"></script>
+
 <script>
+const { transform } = popmotion
+const { interpolate } = transform
 
 // add overlay to each timeline image
 const images = document.querySelectorAll('.stick-figure-overlay')
@@ -107,10 +113,57 @@ images.forEach(image => {
     wrapperInDom.appendChild(image)
 
     // add the overlay
-    const overlay = document.createElement('div')
+    const overlay = document.createElement('vue-overlay')
     overlay.classList.add('overlay')
     wrapperInDom.appendChild(overlay)
 
+})
+
+
+// set up Vue overlay component
+const template = `<svg class="vue-overlay" xmlns="http://www.w3.org/2000/svg" :view-box.camel="viewBoxOutput">
+    <circle
+        v-for="(point, i) in points"
+        :key="i"
+        :cx="point[0] * cmpViewBox.width"
+        :cy="point[1] * cmpViewBox.height"
+        r="5"/>
+</svg>`
+Vue.component('vue-overlay', {
+    template,
+    data(){
+        return {
+            points: [
+                [.5, .2], // head
+                [.5, .4], // neck
+                [.3, .5], // l arm
+                [.7, .5], // r arm
+                [.5, .6], // pelvis
+                [.3, .8], // l leg
+                [.7, .8] // r leg
+            ]
+        }
+    },
+    computed: {
+        cmpViewBox(){
+            const rect = this.$root.$el.getBoundingClientRect()
+            const t = interpolate([0, rect.width], [0, 100])
+            return {
+                width: t(rect.width),
+                height: t(rect.height)
+            }
+        },
+        viewBoxOutput() {
+            return `0 0 ${ this.cmpViewBox.width } ${ this.cmpViewBox.height }`
+        }
+    }
+})
+
+// set up Vue instance for each overlay
+document.querySelectorAll('.stick-wrapper').forEach(el => {
+    new Vue({
+        el
+    })
 })
 
 </script>
