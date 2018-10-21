@@ -4,15 +4,59 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Accessibility</title>
+
+    <style>
+        code {
+            display: block;
+            background: #222;
+            color: #efefef;
+            padding: 20px;
+            line-height: 1.4;
+        }
+        .example {
+            padding: 20px;
+            background: #ccc;
+        }
+        .large {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 10px auto;
+        }
+    </style>
 </head>
 
 <body>
 
 <h1>Universal Design</h1>
 
-<p>The <a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/" target="_blank" rel="noopener noreferrer">Web Accessibility Initiative</a>, or WAI, is the foundation of making content accessible on the Web, so let's start to summarize its main points.</p>
+<p>The <a href="https://www.w3.org/WAI/" target="_blank" rel="noopener noreferrer">Web Accessibility Initiative</a>, or WAI, is the foundation of making content accessible on the Web. Let's take a look at its main points!</p>
 
+<h2>Regions</h2>
 
+<p>Let's say you've got content you want to present like this:</p>
+
+<div class="example">
+    <div class="large">All About Dogs</div>
+    There are at least three different kinds of dogs - let's read about them.<br/>
+    <div class="large">Dog Types</div>
+    &bull; Large<br/>
+    &bull; Small<br/>
+    &bull; Other<br/><br/>
+    [... more content ...]
+</div>
+
+<p>It's not particularly helpful if it's not organized. Stripped of any visual styling like spacing, font weight, and font size, it'll read like this:</p>
+
+<code>
+    All About Dogs
+    There are at least three different kinds of dogs - let's read about them.
+    Dog Types
+    &bull; Large
+    &bull; Small
+    &bull; Other
+</code>
+
+<p>That's already jumbled together and confusing, and it'd be even worse if it was longer.</p>
 
 </body>
 
