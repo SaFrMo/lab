@@ -31,12 +31,14 @@
 
 <p>The <a href="https://www.w3.org/WAI/" target="_blank" rel="noopener noreferrer">Web Accessibility Initiative</a>, or WAI, is the foundation of making content accessible on the Web. Let's take a look at its main points!</p>
 
-<h2>Regions</h2>
+<h2>Semantic Elements</h2>
 
 <p>Let's say you've got content you want to present like this:</p>
 
 <div class="example">
-    <div class="large">All About Dogs</div>
+    <div class="large">The Dog Site - <em>Your Home for Dog Information</em></div>
+    Home - Varieties - Other Info
+    <div class="large">The Varities of Dogs</div>
     There are at least three different kinds of dogs - let's read about them.<br/>
     <div class="large">Dog Types</div>
     &bull; Large<br/>
@@ -45,18 +47,61 @@
     [... more content ...]
 </div>
 
-<p>It's not particularly helpful if it's not organized. Stripped of any visual styling like spacing, font weight, and font size, it'll read like this:</p>
+<p>It's not particularly helpful if it's not organized. Stripped of any visual styling like spacing, font weight, italicization, and font size, it'll read like this:</p>
 
-<code>
-    All About Dogs
+<div class="example">
+    The Dog Site - Your Home for Dog Information
+    Home - Varieties - Other Info
+    The Varities of Dogs
     There are at least three different kinds of dogs - let's read about them.
     Dog Types
     &bull; Large
     &bull; Small
     &bull; Other
-</code>
+    [... more content ...]
+</div>
 
-<p>That's already jumbled together and confusing, and it'd be even worse if it was longer.</p>
+<p>That's already jumbled together and confusing, and it'd be even worse if it was longer. <em>Regions</em> (<a href="https://www.w3.org/WAI/tutorials/page-structure/regions/" target="_blank">source</a>) can help differentiate content, both visually and for assistive technologies.</p>
+
+<h3>Headers</h3>
+
+<details>
+    <summary>The first section looks like a title and navigation - content that will be repeated across different pages of the website. (Click to expand the previous content)</summary>
+
+    <div class="example">
+        <div class="large">The Dog Site - <em>Your Home for Dog Information</em></div>
+        Home - Varieties - Other Info
+    </div>
+</details>
+
+<p>This is fine to skim over visually, but if you need to wade through it on each page, it can get repetitive fast. Navigating through different pages can look like this:</p>
+
+<div class="example">
+    The Dog Site - Your Home for Dog Information
+    Home - Varieties - Other Info
+    Home
+    [...]<br/>
+    The Dog Site - Your Home for Dog Information
+    Home - Varieties - Other Info
+    The Varities of Dogs
+    [...]<br/>
+    The Dog Site - Your Home for Dog Information
+    Home - Varieties - Other Info
+    More Info
+    [...]
+</div>
+
+<p>The only new content comes after the "Other Info" link, so let's give the user the ability to skip over that repeated content:</p>
+
+<pre><code>&lt;header&gt;
+    The Dog Site
+    Your Home for Dog Information
+    Home - Varieties - Other Info
+&lt;/header&gt;</code></pre>
+
+<p>Wrapping items in a header element is a start, but we're still treating all the contents of that header the same. Let's make the roles of each section of text a little clearer!</p>
+
+<h3>H Tags and Navs</h3>
 
 </body>
 
