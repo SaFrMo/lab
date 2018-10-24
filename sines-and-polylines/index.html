@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Sines and Polylines</title>
+
+    <style>
+    svg {
+        width: 150px;
+        height: 150px;
+        margin: auto;
+        display: block;
+        background: rgba(0, 0, 0, 0.2);
+    }
+    polyline {
+        stroke: #000;
+        stroke-width: 1px;
+        fill: none;
+    }
+    </style>
+</head>
+
+<body>
+
+    <h1>Sines and Polylines</h1>
+
+    <p>SVGs are a pretty remarkable resource, and combined with some relatively simple math, they can create some amazing effects. Let's take a look!</p>
+
+    <p>We'll start with the <code>polyline</code>, which takes a set of points and connects them. Here's a polyline with two points, one on the left of the viewbox and one on the right:</p>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <polyline points="10,50 90,50"/>
+    </svg>
+
+    <p>And here's one with three - the third dips down halfway through the viewbox.</p>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <polyline points="10,50 50,75 90,50"/>
+    </svg>
+
+    <p>Using some JS, we can make another line by drawing lots of points:</p>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="curve-1">
+        <polyline points=""/>
+    </svg>
+
+    <script>
+        function buildLine(el, easing = null){
+            const start = 10
+            const end = 90
+
+            const mid = ((end - start) / 2) + start
+            let current = start
+            let points = ""
+
+            while (current <= end) {
+                const x = current
+                let y = Math.abs(mid - current) + start
+
+                if (easing) {
+                    const percentComplete = (current - start) / (end - start)
+                    y = easing(x, y, percentComplete)
+                }
+
+                points += `${ x },${ y } `
+                current++
+            }
+            el.setAttribute('points', points)
+        }
+
+        buildLine(document.querySelector('.curve-1 polyline'))
+
+    </script>
+
+    <p>Let's smooth that line out!</p>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="curve-2">
+        <polyline points=""/>
+    </svg>
+
+    <script>
+        const easeOutQuad = function(x, y, pct){
+            return Math.abs(pct - 0.5) ** 2 * 100 + 25
+        }
+        buildLine(document.querySelector('.curve-2 polyline'), easeOutQuad)
+    </script>
+
+
+</body>
+
+</html>
