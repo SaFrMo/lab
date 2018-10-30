@@ -33,13 +33,13 @@
         <polyline points="10,50 90,50"/>
     </svg>
 
-    <p>And here's one with three - the third dips down halfway through the viewbox.</p>
+    <p>And here's one with three - the second is in the top center, so the line connects the three points.</p>
 
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-        <polyline points="10,50 50,75 90,50"/>
+        <polyline points="10,50 50,10 90,50"/>
     </svg>
 
-    <p>Using some JS, we can make another line by drawing lots of points:</p>
+    <p>Using some JS, we can get the same result by drawing lots of points:</p>
 
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="curve-1">
         <polyline points=""/>
@@ -81,7 +81,7 @@
 
     <script>
         const easeOutQuad = function(x, y, pct){
-            return Math.abs(pct - 0.5) ** 2 * 100 + 25
+            return (pct - 0.5) ** 2 * 180 + 10
         }
         buildLine(document.querySelector('.curve-2 polyline'), easeOutQuad)
     </script>
