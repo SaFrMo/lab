@@ -48,10 +48,10 @@
     <summary>Neat, right? Click here for the code.</summary>
 
     <code>
-const { listen, styler, value, pointer, spring } = window.popmotion;
+const { listen, styler, value, pointer, spring } = window.popmotion
 
-const ball = document.querySelector('.ball');
-const ballStyler = styler(ball);
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
 const ballXY = value({ x: 0, y: 0 }, ballStyler.set)
 
 listen(ball, 'mousedown touchstart').start(() => {
@@ -82,10 +82,10 @@ listen(window, 'mouseup touchend').start(() => {
 
     <script type="text/javascript">
 
-        const { listen, styler, value, pointer, spring } = window.popmotion;
+        const { listen, styler, value, pointer, spring } = window.popmotion
 
-        const ball = document.querySelector('.ball');
-        const ballStyler = styler(ball);
+        const ball = document.querySelector('.ball')
+        const ballStyler = styler(ball)
         const ballXY = value({ x: 0, y: 0 }, ballStyler.set)
 
         listen(ball, 'mousedown touchstart').start(() => {

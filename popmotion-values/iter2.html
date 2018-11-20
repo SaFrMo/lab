@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>Popmotion Values</title>
     <style lang="css">
-        code {
+        code,
+        .code {
             white-space: pre;
             background: #333;
             color: #eee;
@@ -13,12 +14,28 @@
             padding: 0 10px;
             border-radius: 5px;
             line-height: 1.7;
+            font-family: monospace;
+        }
+        .code {
+            font-size: 15px;
         }
         summary {
             cursor: pointer;
         }
         li {
             line-height: 1.5;
+        }
+        .yellow {
+            color: yellow;
+        }
+        .red {
+            color: red;
+        }
+        .green {
+            color: #00cc00;
+        }
+        .gray {
+            color: #777;
         }
     </style>
 </head>
@@ -31,7 +48,7 @@
 
     <p>This does mean, though, that after you've included the library as a whole (via <code>npm install</code> or <code>script src</code>, as documented in the <a href="https://popmotion.io/learn/install/" target="_blank" rel="noopener noreferrer">installation instructions</a>), your first experience with Popmotion will probably be a long list of destructured properties. Our first line is:</p>
 
-    <code>const { listen, styler, value, pointer, spring } = window.popmotion;</code>
+    <code>const { listen, styler, value, pointer, spring } = window.popmotion</code>
 
     <p>Let's briefly touch on each mini-library:</p>
 
@@ -54,27 +71,17 @@
         <li>Set up the triggering mechanism for those animations</li>
     </ul>
 
-    <p>We've already done step 1, so let's attach some stylers to our target elements.</p>
-
-    <p>In this case, the circle is the only thing that's moving, so let's store a reference to it:</p>
-
-<code>const ball = document.querySelector('.ball');
-const ballStyler = styler(ball);
-</code>
-
-    <p><code>document.querySelector('.ball')</code> uses a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors" target="_blank" rel="noopener noreferrer">CSS selector string</a> to find the ball element and store a reference to it. We'll use that reference immediately when attaching a Popmotion styler to that element.</p>
-
-    <p>Right away, we've got tons of new capabilities thanks to the Popmotion styler. We can call <code>
+    <p>We've already done step 1, so we'll head to step 2 - attaching stylers to elements we'll be animating. We'll also gray the previous and following sections out and focus on our current one:</p>
 
 
-    <code style="display: none;">
-const { listen, styler, value, pointer, spring } = window.popmotion;
+    <div class="code">
+<span class="gray">const { listen, styler, value, pointer, spring } = window.popmotion</span>
 
-const ball = document.querySelector('.ball');
-const ballStyler = styler(ball);
-const ballXY = value({ x: 0, y: 0 }, ballStyler.set)
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+<span class="gray">const ballXY = value({ x: 0, y: 0 }, ballStyler.set)</span>
 
-listen(ball, 'mousedown touchstart').start(() => {
+<span class="gray">listen(ball, 'mousedown touchstart').start(() => {
     pointer(ballXY.get()).start(ballXY)
 })
 listen(window, 'mouseup touchend').start(() => {
@@ -84,8 +91,160 @@ listen(window, 'mouseup touchend').start(() => {
         stiffness: 200,
         damping: 10
     }).start(ballXY)
+})</span>
+    </div>
+
+    <p>The first visible line here tells the browser to save a reference to the element with the 'ball' class, which we'll use right away in the second line:</p>
+
+<div class="code">
+<span class="gray">const { listen, styler, value, pointer, spring } = window.popmotion</span>
+
+const ball = document.querySelector('.ball')
+<span class="green">const ballStyler = styler(ball)</span>
+<span class="gray">const ballXY = value({ x: 0, y: 0 }, ballStyler.set)</span>
+
+<span class="gray">listen(ball, 'mousedown touchstart').start(() => {
+    pointer(ballXY.get()).start(ballXY)
 })
-    </code>
+listen(window, 'mouseup touchend').start(() => {
+    spring({
+        from: ballXY.get(),
+        to: 0,
+        stiffness: 200,
+        damping: 10
+    }).start(ballXY)
+})</span>
+    </div>
+
+    <p>We've got our styler declared - we'll be able to use <code>ballStyler</code> to get and set styles using Popmotion's efficient rendering process soon. There's one more step before we start doing so, though. Let's look at the next line:</p>
+
+<div class="code">
+<span class="gray">const { listen, styler, value, pointer, spring } = window.popmotion</span>
+
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+<span class="green">const ballXY = value({ x: 0, y: 0 }, ballStyler.set)</span>
+
+<span class="gray">listen(ball, 'mousedown touchstart').start(() => {
+    pointer(ballXY.get()).start(ballXY)
+})
+listen(window, 'mouseup touchend').start(() => {
+    spring({
+        from: ballXY.get(),
+        to: 0,
+        stiffness: 200,
+        damping: 10
+    }).start(ballXY)
+})</span>
+    </div>
+
+    <p>What <code>value</code> actually does might be clearer if we made our code a bit wordier:</p>
+
+<div class="code">
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+
+<span class="green">const startingCoordinates = { x: 0, y: 0 }
+
+const ballXY = value(startingCoordinates, function(newCoordinates){
+    const newX = newCoordinates.x
+    const newY = newCoordinates.y
+
+    ballStyler.set('x', newX)
+    ballStyler.set('y', newY)
+})</span>
+<span class="red">const ballXY = value({ x: 0, y: 0 }, ballStyler.set)</span>
+
+</div>
+
+    <p>This JavaScript probably looks a bit more familiar than the Popmotion flavor above. We're providing the <code>value</code> function with a starting value (which can be a number, object, array, or hex string) and a callback to fire when that value changes.</p>
+
+    <p><code>ballStyler.set</code> knows what to do with an object, though, so we could simplify the callback to look like this:</p>
+
+<div class="code">
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+
+const startingCoordinates = { x: 0, y: 0 }
+
+const ballXY = value(startingCoordinates, function(newCoordinates){
+    <span class="green">ballStyler.set({
+        x: newCoordinates.x,
+        y: newCoordinates.y
+    })</span>
+    <span class="red">const newX = newCoordinates.x
+    const newY = newCoordinates.y
+
+    ballStyler.set('x', newX)
+    ballStyler.set('y', newY)</span>
+})
+
+</div>
+
+    <p>Since the <code>newCoordinates</code> object has X and Y properties just like our single argument for <code>ballStyler.set</code>, we could simplify things even further:</p>
+
+<div class="code">
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+
+const startingCoordinates = { x: 0, y: 0 }
+
+const ballXY = value(startingCoordinates, function(newCoordinates){
+    <span class="green">ballStyler.set(newCoordinates)</span>
+    <span class="red">ballStyler.set({
+        x: newCoordinates.x,
+        y: newCoordinates.y
+    })</span>
+})
+
+</div>
+
+    <p>Thanks to ES6, we can collapse that down to an arrow function:</p>
+
+<div class="code">
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+
+const startingCoordinates = { x: 0, y: 0 }
+
+const ballXY = value(
+    startingCoordinates,
+    <span class="green">newCoordinates => ballStyler.set(newCoordinates)</span>
+    <span class="red">function(newCoordinates){
+        ballStyler.set(newCoordinates)
+    }</span>
+)
+
+</div>
+
+    <p>And finally, we can pass the function itself without calling it, since both the callback and <code>ballStyler.set</code> can work with one argument:</p>
+
+<div class="code">
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+
+const startingCoordinates = { x: 0, y: 0 }
+
+const ballXY = value(
+    startingCoordinates,
+    <span class="green">ballStyler.set</span>
+    <span class="red">newCoordinates => ballStyler.set(newCoordinates)</span>
+)
+
+</div>
+
+    <p>Collapse the <code>startingCoordinates</code> declaration and we're back where we started!</p>
+
+<div class="code">
+const ball = document.querySelector('.ball')
+const ballStyler = styler(ball)
+
+<span class="red">const startingCoordinates = { x: 0, y: 0 }</span>
+
+const ballXY = value(<span class="green">{ x: 0, y: 0 }</span>, ballStyler.set)
+
+</div>
+
 
 </body>
 
