@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Popmotion Values</title>
+    <style lang="css">
+        .ball-wrap {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -10;
+        }
+        .ball {
+            width: 100px;
+            height: 100px;
+            background-color: tomato;
+            border-radius: 50%;
+        }
+        code {
+            white-space: pre;
+            background: #333;
+            color: #ccc;
+            display: inline-block;
+            padding: 0 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        summary {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>The End Result</h1>
+
+    <p>Click and drag the circle at the center of the screen. It'll snap back to its starting position when you let go.</p>
+
+    <details>
+    <summary>Neat, right? Click here for the code.</summary>
+
+    <code>
+const { listen, styler, value, pointer, spring } = window.popmotion;
+
+const ball = document.querySelector('.ball');
+const ballStyler = styler(ball);
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set)
+
+listen(ball, 'mousedown touchstart').start(() => {
+    pointer(ballXY.get()).start(ballXY)
+})
+listen(window, 'mouseup touchend').start(() => {
+    spring({
+        from: ballXY.get(),
+        to: 0,
+        stiffness: 200,
+        damping: 10
+    }).start(ballXY)
+})
+    </code>
+    </details>
+
+    <p>This is all the code we need for some pretty complex interactions here, which is a double-edged sword.</p>
+
+    <p>One the one hand, it's very compact, but on the other, it's not particularly intuitive. There are a lot of callbacks being passed around without signatures and some unclear conventions.</p>
+
+    <p>Let's take a closer look at this code (and, by extension, lots of useful techniques for both Popmotion and Javascript!). Click <a href="/popmotion-values/iter2">here</a> to continue.</p>
+
+    <div class="ball-wrap">
+        <div class="ball"></div>
+    </div>
+
+    <script src="/js/popmotion.global.min.js"></script>
+
+    <script type="text/javascript">
+
+        const { listen, styler, value, pointer, spring } = window.popmotion;
+
+        const ball = document.querySelector('.ball');
+        const ballStyler = styler(ball);
+        const ballXY = value({ x: 0, y: 0 }, ballStyler.set)
+
+        listen(ball, 'mousedown touchstart').start(() => {
+            pointer(ballXY.get()).start(ballXY)
+        })
+        listen(window, 'mouseup touchend').start(() => {
+            spring({
+                from: ballXY.get(),
+                to: 0,
+                stiffness: 200,
+                damping: 10
+            }).start(ballXY)
+        })
+
+    </script>
+
+</body>
+
+</html>
