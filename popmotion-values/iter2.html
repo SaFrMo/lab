@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Popmotion Values</title>
+    <style lang="css">
+        code {
+            white-space: pre;
+            background: #333;
+            color: #eee;
+            display: inline-block;
+            padding: 0 10px;
+            border-radius: 5px;
+            line-height: 1.7;
+        }
+        summary {
+            cursor: pointer;
+        }
+        li {
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Popmotion Tools</h1>
+
+    <p>Popmotion is more than an animation library - Popmotion Pure bills itself as "a Swiss Army knife for animators and UI developers," and the analogy is a really good one. Once you've started using some Popmotion tools, don't be surprised if you find yourself importing them on other projects, even ones without the complex animations that Popmotion can perform.</p>
+
+    <p>This does mean, though, that after you've included the library as a whole (via <code>npm install</code> or <code>script src</code>, as documented in the <a href="https://popmotion.io/learn/install/" target="_blank" rel="noopener noreferrer">installation instructions</a>), your first experience with Popmotion will probably be a long list of destructured properties. Our first line is:</p>
+
+    <code>const { listen, styler, value, pointer, spring } = window.popmotion;</code>
+
+    <p>Let's briefly touch on each mini-library:</p>
+
+    <ul class="libraries">
+        <li><code>listen</code> - A good bit like jQuery's <code>$(document).on()</code>. Basically an advanced event listener.</li>
+        <li><code>styler</code> - An ultra-useful feature that sets and keeps track of an element's style.</li>
+        <li><code>value</code> - Like having a dedicated record-keeper for a single value. Watches how that value changes over time and runs a callback each time a change happens. We'll be diving into this one plenty more.</li>
+        <li><code>pointer</code> - A feature to keep track of pointer position, either touch or mouse, and perform a callback when that position changes.</li>
+        <li><code>spring</code> - An animation from A to B that includes some extra spring-like movement when heading toward B.</li>
+    </ul>
+
+    <h2>Initial Setup</h2>
+
+    <p>My experience writing Popmotion code usually goes like this:</p>
+
+    <ul>
+        <li>Import necessary libraries</li>
+        <li>Attach stylers to elements we'll be animating or interacting with</li>
+        <li>Write what animations/interactions will happen on those elements</li>
+        <li>Set up the triggering mechanism for those animations</li>
+    </ul>
+
+    <p>We've already done step 1, so let's attach some stylers to our target elements.</p>
+
+    <p>In this case, the circle is the only thing that's moving, so let's store a reference to it:</p>
+
+<code>const ball = document.querySelector('.ball');
+const ballStyler = styler(ball);
+</code>
+
+    <p><code>document.querySelector('.ball')</code> uses a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors" target="_blank" rel="noopener noreferrer">CSS selector string</a> to find the ball element and store a reference to it. We'll use that reference immediately when attaching a Popmotion styler to that element.</p>
+
+    <p>Right away, we've got tons of new capabilities thanks to the Popmotion styler. We can call <code>
+
+
+    <code style="display: none;">
+const { listen, styler, value, pointer, spring } = window.popmotion;
+
+const ball = document.querySelector('.ball');
+const ballStyler = styler(ball);
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set)
+
+listen(ball, 'mousedown touchstart').start(() => {
+    pointer(ballXY.get()).start(ballXY)
+})
+listen(window, 'mouseup touchend').start(() => {
+    spring({
+        from: ballXY.get(),
+        to: 0,
+        stiffness: 200,
+        damping: 10
+    }).start(ballXY)
+})
+    </code>
+
+</body>
+
+</html>
